@@ -1,0 +1,11 @@
+version: '3'
+
+vars:
+  VERSION: 0.0.1
+  LDFLAGS: -X 'codeberg.org/whou/simpleutils/coreutils.Version={{.VERSION}}'
+
+tasks:
+  build:
+    cmds:
+      - mkdir -p build
+      - go build -o build/cat -ldflags="{{.LDFLAGS}}" ./coreutils/cat/cat.go
