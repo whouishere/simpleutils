@@ -11,6 +11,7 @@ import (
 
 	"codeberg.org/whou/simpleutils/coreutils"
 	"codeberg.org/whou/simpleutils/internal/cmd"
+	myio "codeberg.org/whou/simpleutils/internal/io"
 )
 
 var versionFlag *cmd.Flag[bool]
@@ -41,19 +42,6 @@ func runFlags() {
 	}
 }
 
-func fileExists(path string) (bool, error) {
-	_, err := os.Stat(path)
-	if err != nil {
-		if os.IsNotExist(err) {
-			err = nil
-		}
-
-		return false, err
-	}
-
-	return true, nil
-}
-
 // scan given file list
 func scan(files []*os.File, isDone *bool) {
 	for _, file := range files {
@@ -76,6 +64,7 @@ func scan(files []*os.File, isDone *bool) {
 func getFiles() []*os.File {
 	var files []*os.File
 
+	// if no flags are passed, just read from STDIN
 	// we don't use flag.Args() because it doesn't detect '-' only args
 	paths := cmd.GetNonFlags()
 	if paths == nil {
@@ -83,12 +72,13 @@ func getFiles() []*os.File {
 	}
 
 	for _, path := range paths {
+		// if argument is "-" add STDIN to read
 		if path == "-" {
 			files = append(files, os.Stdin)
 			continue
 		}
 
-		exist, err := fileExists(path)
+		exist, err := myio.FileExists(path)
 		if err != nil {
 			panic(err)
 		}
