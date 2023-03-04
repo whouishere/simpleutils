@@ -11,3 +11,4 @@ If you notice something can be better, especially more simple, please contribute
 | Utility | Completed | Notes |
 | ------- | --------- | ----- |
 | cat     | 🟨 | Functional |
+| rmdir   | 🟨 | Functional |
