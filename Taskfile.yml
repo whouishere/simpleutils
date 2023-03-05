@@ -10,3 +10,4 @@ tasks:
       - mkdir -p build
       - go build -o build/cat -ldflags="{{.LDFLAGS}}" ./coreutils/cat/cat.go
       - go build -o build/rmdir -ldflags="{{.LDFLAGS}}" ./coreutils/rmdir/rmdir.go
+      - go build -o build/pwd -ldflags="{{.LDFLAGS}}" ./coreutils/pwd/pwd.go
