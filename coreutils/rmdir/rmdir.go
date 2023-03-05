@@ -13,8 +13,9 @@ var usage = `Usage: %s [OPTION(s)]... DIRECTORY
 
 `
 
-var parentsFlag *cmd.Flag[bool]
 var nonemptyFlag *cmd.Flag[bool]
+var parentsFlag *cmd.Flag[bool]
+var verboseFlag *cmd.Flag[bool]
 
 func runFlags() {
 	cmd.Init(binary, usage, binary, binary)
@@ -30,6 +31,12 @@ func runFlags() {
 		"ignore any fails solely because of non-empty directories",
 		nil)
 	cmd.RegisterFlag(nonemptyFlag)
+
+	verboseFlag = cmd.NewFlag(false,
+		"verbose", "v",
+		"ouput verbose messages for every processed directory",
+		nil)
+	cmd.RegisterFlag(verboseFlag)
 
 	cmd.Parse()
 }
@@ -57,6 +64,10 @@ func parentRemove(rmdir string) {
 
 func removeDir(rmdir string) {
 	cmd.SetErrorPrefix("Failed to remove '", rmdir, "'.")
+
+	if *verboseFlag.Value {
+		cmd.Log("Removing directory '", rmdir, "'.")
+	}
 
 	exist, err := myio.FileExists(rmdir)
 	if err != nil {
