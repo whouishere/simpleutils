@@ -15,6 +15,7 @@ If you notice something can be better, especially more simple, please contribute
 | cat     | 🟨 | Functional |
 | pwd     | ✅ |            |
 | rmdir   | ✅ |            |
+| whoami  | ✅ |            |
 
 </div>
 
