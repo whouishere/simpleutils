@@ -15,9 +15,65 @@ var usage = `Usage: %s [OPTION(s)]... DIRECTORY
 
 `
 
+var recursiveFlag *cmd.Flag[bool]
+
 func runFlags() {
 	cmd.Init(binary, usage)
+
+	recursiveFlag = cmd.NewFlag(false,
+		"recursive", "r",
+		"remove empty DIRECTORY(ies) recursively",
+		nil)
+	cmd.RegisterFlag(recursiveFlag)
+
 	cmd.Parse()
+}
+
+func recursiveRemove(rmdir string, entries []string) {
+	initialpath, err := os.Getwd()
+	if err != nil {
+		panic(err)
+	}
+
+	// cd into the passed directory
+	err = os.Chdir(rmdir)
+	if err != nil {
+		panic(err)
+	}
+
+	// loop through the directory's found paths
+	for _, path := range entries {
+		isdir, err := myio.FileIsDir(path)
+		if err != nil {
+			panic(err)
+		}
+
+		if !isdir {
+			fmt.Println("A non-empty directory was passed. Can't remove!")
+			os.Exit(1)
+		}
+
+		isempty, err := myio.IsDirEmpty(path)
+		if err != nil {
+			panic(err)
+		}
+
+		if !isempty {
+			fmt.Println("Directory is not empty. Can't remove!")
+			os.Exit(1)
+		}
+	}
+
+	// cd back to the initial directory
+	err = os.Chdir(initialpath)
+	if err != nil {
+		panic(err)
+	}
+
+	err = os.RemoveAll(rmdir)
+	if err != nil {
+		panic(err)
+	}
 }
 
 func removeDir(rmdir string) {
@@ -42,63 +98,19 @@ func removeDir(rmdir string) {
 		panic(err)
 	}
 
+	// finally remove it if directory is empty
 	if len(entries) == 0 {
-		dir.Close() // close the directory before deleting it
 		err := os.Remove(rmdir)
-
 		if err != nil {
 			panic(err)
 		}
-
-		return
-	}
-
-	initialpath, err := os.Getwd()
-	if err != nil {
-		panic(err)
-	}
-
-	// cd into the passed directory
-	err = os.Chdir(rmdir)
-	if err != nil {
-		panic(err)
-	}
-
-	// loop through the directory's found paths
-	for _, path := range entries {
-		isdir, err := myio.FileIsDir(path)
-		if err != nil {
-			panic(err)
-		}
-
-		if !isdir {
-			fmt.Println("A non-empty directory was passed. Can't remove!")
+	} else {
+		if *recursiveFlag.Value {
 			dir.Close()
-			os.Exit(1)
+			recursiveRemove(rmdir, entries)
+		} else {
+			log.Fatalln("Directory is not empty. Can't remove!")
 		}
-
-		isempty, err := myio.IsDirEmpty(path)
-		if err != nil {
-			panic(err)
-		}
-
-		if !isempty {
-			fmt.Println("A non-empty directory was passed. Can't remove!")
-			dir.Close()
-			os.Exit(1)
-		}
-	}
-
-	// come back to the initial directory and close the dir to remove it.
-	err = os.Chdir(initialpath)
-	if err != nil {
-		panic(err)
-	}
-	dir.Close()
-
-	err = os.RemoveAll(rmdir)
-	if err != nil {
-		panic(err)
 	}
 }
 
