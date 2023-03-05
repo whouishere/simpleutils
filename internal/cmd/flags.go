@@ -8,7 +8,6 @@ import (
 	flag "github.com/erikjuhani/miniflag"
 )
 
-var Binary string
 var versionFlag *Flag[bool]
 
 type Flag[T any] struct {
@@ -27,7 +26,7 @@ func Init(binary, usage string, format ...any) {
 		flag.CommandLine.PrintDefaults()
 	}
 
-	Binary = binary
+	coreutils.Binary = binary
 
 	// universal version flag
 	versionFlag = NewFlag(false, "version", "version", "print version info and exit", func() {

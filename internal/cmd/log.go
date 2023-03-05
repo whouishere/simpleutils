@@ -4,6 +4,8 @@ import (
 	"fmt"
 	"log"
 	"os"
+
+	"codeberg.org/whou/simpleutils/coreutils"
 )
 
 var errorPrefix string
@@ -15,21 +17,21 @@ func SetErrorPrefix(msg string, a ...any) {
 
 // Print soft message-only log message
 func Log(msg string, a ...any) {
-	fmt.Printf("%s: %s%s\n", Binary, msg, fmt.Sprint(a...))
+	fmt.Printf("%s: %s%s\n", coreutils.Binary, msg, fmt.Sprint(a...))
 }
 
 // Print error message without exiting
 func Error(msg string, a ...any) {
-	fmt.Printf("%s: %s%s%s\n", Binary, errorPrefix, msg, fmt.Sprint(a...))
+	fmt.Printf("%s: %s%s%s\n", coreutils.Binary, errorPrefix, msg, fmt.Sprint(a...))
 }
 
 // Print error message to stderr and exit with code 1
 func FatalStderr(msg string, a ...any) {
-	fmt.Fprintf(os.Stderr, "%s: %s%s%s\n", Binary, errorPrefix, msg, fmt.Sprint(a...))
+	fmt.Fprintf(os.Stderr, "%s: %s%s%s\n", coreutils.Binary, errorPrefix, msg, fmt.Sprint(a...))
 	os.Exit(1)
 }
 
 // Print error message and exit with code 1
 func FatalError(msg string, a ...any) {
-	log.Fatalf("%s: %s%s%s\n", Binary, errorPrefix, msg, fmt.Sprint(a...))
+	log.Fatalf("%s: %s%s%s\n", coreutils.Binary, errorPrefix, msg, fmt.Sprint(a...))
 }
