@@ -66,9 +66,9 @@ func removeDir(rmdir string) {
 
 	// loop through the directory's found paths
 	for _, path := range entries {
-		isdir, err := myio.IsDirEmpty(path)
+		isdir, err := myio.FileIsDir(path)
 		if err != nil {
-			panic(nil)
+			panic(err)
 		}
 
 		if !isdir {
