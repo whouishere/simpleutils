@@ -14,6 +14,7 @@ var usage = `Usage: %s [OPTION(s)]... DIRECTORY
 `
 
 var parentsFlag *cmd.Flag[bool]
+var nonemptyFlag *cmd.Flag[bool]
 
 func runFlags() {
 	cmd.Init(binary, usage, binary, binary)
@@ -23,6 +24,12 @@ func runFlags() {
 		"remove DIRECTORY and its empty parents",
 		nil)
 	cmd.RegisterFlag(parentsFlag)
+
+	nonemptyFlag = cmd.NewFlag(false,
+		"ignore-fail-on-non-empty", "ignore-fail-on-non-empty",
+		"ignore any fails solely because of non-empty directories",
+		nil)
+	cmd.RegisterFlag(nonemptyFlag)
 
 	cmd.Parse()
 }
@@ -83,7 +90,7 @@ func removeDir(rmdir string) {
 		if *parentsFlag.Value {
 			parentRemove(rmdir)
 		}
-	} else {
+	} else if !*nonemptyFlag.Value {
 		cmd.FatalError("Directory is not empty.")
 	}
 }

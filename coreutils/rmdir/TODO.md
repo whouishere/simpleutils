@@ -6,4 +6,4 @@
 - [ ] Implement extra flags
   - [X] --parents
   - [ ] --verbose
-  - [ ] --ignore-fail-on-non-empty
+  - [X] --ignore-fail-on-non-empty
