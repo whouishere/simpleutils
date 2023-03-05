@@ -1,17 +1,13 @@
 package main
 
 import (
-	"flag"
 	"fmt"
 	"log"
 	"os"
 
-	"codeberg.org/whou/simpleutils/coreutils"
 	"codeberg.org/whou/simpleutils/internal/cmd"
 	myio "codeberg.org/whou/simpleutils/internal/io"
 )
-
-// var versionFlag *cmd.Flag[bool]
 
 var binary = "rmdir"
 var usage = `Usage: %s [OPTION(s)]... DIRECTORY
@@ -20,19 +16,8 @@ var usage = `Usage: %s [OPTION(s)]... DIRECTORY
 `
 
 func runFlags() {
-	versionFlag := flag.Bool("version", false, "print version info and exit")
-
-	// modify default usage text
-	flag.CommandLine.Usage = func() {
-		fmt.Fprintf(flag.CommandLine.Output(), usage, binary, binary)
-		flag.CommandLine.PrintDefaults()
-	}
-	flag.Parse()
-
-	if *versionFlag {
-		fmt.Printf("%s version %s\n", binary, coreutils.Version)
-		os.Exit(0)
-	}
+	cmd.Init(binary, usage)
+	cmd.Parse()
 }
 
 func removeDir(rmdir string) {

@@ -1,8 +1,14 @@
 package cmd
 
 import (
+	"fmt"
+	"os"
+
+	"codeberg.org/whou/simpleutils/coreutils"
 	flag "github.com/erikjuhani/miniflag"
 )
+
+var versionFlag *Flag[bool]
 
 type Flag[T any] struct {
 	Value        *T
@@ -11,6 +17,29 @@ type Flag[T any] struct {
 	shorthand    string
 	usage        string
 	Function     func()
+}
+
+func Init(binary, usage string) {
+	// modify default usage text
+	flag.CommandLine.Usage = func() {
+		fmt.Fprintf(flag.CommandLine.Output(), usage, binary, binary)
+		flag.CommandLine.PrintDefaults()
+	}
+
+	// universal version flag
+	versionFlag = NewFlag(false, "version", "version", "print version info and exit", func() {
+		fmt.Printf("%s version %s\n", binary, coreutils.Version)
+		os.Exit(0)
+	})
+	RegisterFlag(versionFlag)
+}
+
+func Parse() {
+	flag.Parse()
+
+	if *versionFlag.Value {
+		versionFlag.Function()
+	}
 }
 
 func NewFlag[T any](value T, name, shorthand, usage string, function func()) *Flag[T] {

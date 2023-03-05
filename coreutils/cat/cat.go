@@ -7,14 +7,9 @@ import (
 	"os/signal"
 	"syscall"
 
-	flag "github.com/erikjuhani/miniflag"
-
-	"codeberg.org/whou/simpleutils/coreutils"
 	"codeberg.org/whou/simpleutils/internal/cmd"
 	myio "codeberg.org/whou/simpleutils/internal/io"
 )
-
-var versionFlag *cmd.Flag[bool]
 
 var binary = "cat"
 var usage = `Usage: %s [OPTION(s)]... [FILE(s)]...
@@ -24,22 +19,8 @@ If no FILE is given, or if FILE is -, the standard input is read.
 `
 
 func runFlags() {
-	versionFlag = cmd.NewFlag(false, "version", "version", "print version info and exit", func() {
-		fmt.Printf("%s version %s\n", binary, coreutils.Version)
-		os.Exit(0)
-	})
-	cmd.RegisterFlag(versionFlag)
-
-	// modify default usage text
-	flag.CommandLine.Usage = func() {
-		fmt.Fprintf(flag.CommandLine.Output(), usage, binary, binary)
-		flag.CommandLine.PrintDefaults()
-	}
-	flag.Parse()
-
-	if *versionFlag.Value {
-		versionFlag.Function()
-	}
+	cmd.Init(binary, usage)
+	cmd.Parse()
 }
 
 // scan given file list
