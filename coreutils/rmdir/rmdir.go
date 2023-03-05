@@ -14,6 +14,7 @@ var usage = `Usage: %s [OPTION(s)]... DIRECTORY
 `
 
 var recursiveFlag *cmd.Flag[bool]
+var parentsFlag *cmd.Flag[bool]
 
 func runFlags() {
 	cmd.Init(binary, usage, binary, binary)
@@ -23,6 +24,12 @@ func runFlags() {
 		"remove empty DIRECTORY(ies) recursively",
 		nil)
 	cmd.RegisterFlag(recursiveFlag)
+
+	parentsFlag = cmd.NewFlag(false,
+		"parents", "p",
+		"remove DIRECTORY and its empty parents",
+		nil)
+	cmd.RegisterFlag(parentsFlag)
 
 	cmd.Parse()
 }
@@ -72,7 +79,30 @@ func recursiveRemove(rmdir string, entries []string) {
 	}
 }
 
+func parentRemove(rmdir string) {
+	runedir := []rune(rmdir)
+	// remove trailing slash
+	if runedir[len(runedir)-1] == '/' {
+		runedir = runedir[:len(runedir)-1]
+	}
+
+	var parents []string
+	for i := range runedir {
+		if runedir[i] == '/' {
+			parents = append(parents, string(runedir[:i]))
+		}
+	}
+
+	// disable parents flag and remove empty parents
+	*parentsFlag.Value = false
+	for i := len(parents) - 1; i >= 0; i-- { // reverse iterate
+		removeDir(parents[i])
+	}
+}
+
 func removeDir(rmdir string) {
+	cmd.SetErrorPrefix("Failed to remove '", rmdir, "'.")
+
 	exist, err := myio.FileExists(rmdir)
 	if err != nil {
 		panic(err)
@@ -96,9 +126,14 @@ func removeDir(rmdir string) {
 
 	// finally remove it if directory is empty
 	if len(entries) == 0 {
+		dir.Close()
 		err := os.Remove(rmdir)
 		if err != nil {
 			panic(err)
+		}
+
+		if *parentsFlag.Value {
+			parentRemove(rmdir)
 		}
 	} else {
 		if *recursiveFlag.Value {
@@ -118,8 +153,6 @@ func main() {
 		cmd.FatalStderr("Missing command-line argument.\nUse '", binary, " --help' for more information.")
 	}
 	arg := cmd.GetNonFlags()[0]
-
-	cmd.SetErrorPrefix("Failed to remove '", arg, "'.")
 
 	removeDir(arg)
 
