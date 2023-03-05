@@ -1,8 +1,6 @@
 package main
 
 import (
-	"fmt"
-	"log"
 	"os"
 
 	"codeberg.org/whou/simpleutils/internal/cmd"
@@ -49,8 +47,7 @@ func recursiveRemove(rmdir string, entries []string) {
 		}
 
 		if !isdir {
-			fmt.Println("A non-empty directory was passed. Can't remove!")
-			os.Exit(1)
+			cmd.FatalError("Directory is not empty.")
 		}
 
 		isempty, err := myio.IsDirEmpty(path)
@@ -59,8 +56,7 @@ func recursiveRemove(rmdir string, entries []string) {
 		}
 
 		if !isempty {
-			fmt.Println("Directory is not empty. Can't remove!")
-			os.Exit(1)
+			cmd.FatalError("Directory is not empty.")
 		}
 	}
 
@@ -82,7 +78,7 @@ func removeDir(rmdir string) {
 		panic(err)
 	}
 	if !exist {
-		log.Fatalln("This directory does not exist!")
+		cmd.FatalError("Directory does not exist.")
 	}
 
 	// open passed directory
@@ -109,7 +105,7 @@ func removeDir(rmdir string) {
 			dir.Close()
 			recursiveRemove(rmdir, entries)
 		} else {
-			log.Fatalln("Directory is not empty. Can't remove!")
+			cmd.FatalError("Directory is not empty.")
 		}
 	}
 }
@@ -119,10 +115,11 @@ func main() {
 
 	args := cmd.GetNonFlags()
 	if args == nil {
-		fmt.Fprintf(os.Stderr, "Missing command-line argument.\nUse '%s --help' for more information.\n", binary)
-		os.Exit(1)
+		cmd.FatalStderr("Missing command-line argument.\nUse '", binary, " --help' for more information.")
 	}
 	arg := cmd.GetNonFlags()[0]
+
+	cmd.SetErrorPrefix("Failed to remove '", arg, "'.")
 
 	removeDir(arg)
 
