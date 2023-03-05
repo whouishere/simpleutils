@@ -55,11 +55,13 @@ func parentRemove(rmdir string) {
 		}
 	}
 
-	// disable parents flag and remove empty parents
+	// remove empty parents
 	*parentsFlag.Value = false
 	for i := len(parents) - 1; i >= 0; i-- { // reverse iterate
 		removeDir(parents[i])
 	}
+	// the flag is temporarily disabled to avoid recursion
+	*parentsFlag.Value = true
 }
 
 func removeDir(rmdir string) {
@@ -113,9 +115,10 @@ func main() {
 	if args == nil {
 		cmd.FatalStderr("Missing command-line argument.\nUse '", binary, " --help' for more information.")
 	}
-	arg := cmd.GetNonFlags()[0]
 
-	removeDir(arg)
+	for _, arg := range args {
+		removeDir(arg)
+	}
 
 	os.Exit(0)
 }

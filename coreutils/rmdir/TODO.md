@@ -7,4 +7,4 @@
   - [X] --parents
   - [X] --verbose
   - [X] --ignore-fail-on-non-empty
-- [ ] Support multiple arguments
+- [X] Support multiple arguments

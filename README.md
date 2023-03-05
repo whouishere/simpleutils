@@ -8,7 +8,17 @@ Though I do want to make the code as simple as possible, always __trying__ to fo
 If you notice something can be better, especially more simple, please contribute to the code!
 
 ## Progress
+<div style="text-align: center;">
+
 | Utility | Completed | Notes |
 | ------- | --------- | ----- |
 | cat     | 🟨 | Functional |
-| rmdir   | 🟨 | Functional |
+| rmdir   | ✅ |            |
+
+</div>
+
+## Main goals
+- [ ] Finish the simpler programs
+- [ ] Make the simpler programs be feature complete and/or equivalent to GNU
+- [ ] Write some kind of documentation for every program
+- [ ] Finish all coreutils
