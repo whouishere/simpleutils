@@ -19,10 +19,10 @@ type Flag[T any] struct {
 	Function     func()
 }
 
-func Init(binary, usage string) {
+func Init(binary, usage string, format ...any) {
 	// modify default usage text
 	flag.CommandLine.Usage = func() {
-		fmt.Fprintf(flag.CommandLine.Output(), usage, binary, binary)
+		fmt.Fprintf(flag.CommandLine.Output(), usage, format...)
 		flag.CommandLine.PrintDefaults()
 	}
 

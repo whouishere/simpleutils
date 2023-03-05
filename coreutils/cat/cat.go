@@ -19,7 +19,7 @@ If no FILE is given, or if FILE is -, the standard input is read.
 `
 
 func runFlags() {
-	cmd.Init(binary, usage)
+	cmd.Init(binary, usage, binary, binary)
 	cmd.Parse()
 }
 

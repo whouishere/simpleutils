@@ -18,7 +18,7 @@ var usage = `Usage: %s [OPTION(s)]... DIRECTORY
 var recursiveFlag *cmd.Flag[bool]
 
 func runFlags() {
-	cmd.Init(binary, usage)
+	cmd.Init(binary, usage, binary, binary)
 
 	recursiveFlag = cmd.NewFlag(false,
 		"recursive", "r",
