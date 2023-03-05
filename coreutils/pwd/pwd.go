@@ -9,7 +9,7 @@ import (
 )
 
 var binary = "pwd"
-var usage = `Usage: %s [OPTION(s)]...
+var usage = `Usage: %s [OPTION]...
 %s prints the full name of the working directory.
 
 `

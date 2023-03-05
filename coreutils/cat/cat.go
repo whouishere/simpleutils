@@ -12,7 +12,7 @@ import (
 )
 
 var binary = "cat"
-var usage = `Usage: %s [OPTION(s)]... [FILE(s)]...
+var usage = `Usage: %s [OPTION]... [FILE]...
 %s concatenates FILE(s) to the standard output.
 If no FILE is given, or if FILE is -, the standard input is read.
 

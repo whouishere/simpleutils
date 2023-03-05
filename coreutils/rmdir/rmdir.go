@@ -8,7 +8,7 @@ import (
 )
 
 var binary = "rmdir"
-var usage = `Usage: %s [OPTION(s)]... DIRECTORY
+var usage = `Usage: %s [OPTION]... DIRECTORY...
 %s removes empty DIRECTORY(ies).
 
 `
