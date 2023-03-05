@@ -13,17 +13,10 @@ var usage = `Usage: %s [OPTION(s)]... DIRECTORY
 
 `
 
-var recursiveFlag *cmd.Flag[bool]
 var parentsFlag *cmd.Flag[bool]
 
 func runFlags() {
 	cmd.Init(binary, usage, binary, binary)
-
-	recursiveFlag = cmd.NewFlag(false,
-		"recursive", "r",
-		"remove empty DIRECTORY(ies) recursively",
-		nil)
-	cmd.RegisterFlag(recursiveFlag)
 
 	parentsFlag = cmd.NewFlag(false,
 		"parents", "p",
@@ -32,51 +25,6 @@ func runFlags() {
 	cmd.RegisterFlag(parentsFlag)
 
 	cmd.Parse()
-}
-
-func recursiveRemove(rmdir string, entries []string) {
-	initialpath, err := os.Getwd()
-	if err != nil {
-		panic(err)
-	}
-
-	// cd into the passed directory
-	err = os.Chdir(rmdir)
-	if err != nil {
-		panic(err)
-	}
-
-	// loop through the directory's found paths
-	for _, path := range entries {
-		isdir, err := myio.FileIsDir(path)
-		if err != nil {
-			panic(err)
-		}
-
-		if !isdir {
-			cmd.FatalError("Directory is not empty.")
-		}
-
-		isempty, err := myio.IsDirEmpty(path)
-		if err != nil {
-			panic(err)
-		}
-
-		if !isempty {
-			cmd.FatalError("Directory is not empty.")
-		}
-	}
-
-	// cd back to the initial directory
-	err = os.Chdir(initialpath)
-	if err != nil {
-		panic(err)
-	}
-
-	err = os.RemoveAll(rmdir)
-	if err != nil {
-		panic(err)
-	}
 }
 
 func parentRemove(rmdir string) {
@@ -136,12 +84,7 @@ func removeDir(rmdir string) {
 			parentRemove(rmdir)
 		}
 	} else {
-		if *recursiveFlag.Value {
-			dir.Close()
-			recursiveRemove(rmdir, entries)
-		} else {
-			cmd.FatalError("Directory is not empty.")
-		}
+		cmd.FatalError("Directory is not empty.")
 	}
 }
 
