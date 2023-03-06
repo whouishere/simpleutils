@@ -10,6 +10,7 @@ tasks:
       - mkdir -p build
       - go build -o build/cat -ldflags="{{.LDFLAGS}}" ./coreutils/cat/cat.go
       - go build -o build/dirname -ldflags="{{.LDFLAGS}}" ./coreutils/dirname/dirname.go
+      - go build -o build/printenv -ldflags="{{.LDFLAGS}}" ./coreutils/printenv/printenv.go
       - go build -o build/pwd -ldflags="{{.LDFLAGS}}" ./coreutils/pwd/pwd.go
       - go build -o build/rmdir -ldflags="{{.LDFLAGS}}" ./coreutils/rmdir/rmdir.go
       - go build -o build/whoami -ldflags="{{.LDFLAGS}}" ./coreutils/whoami/whoami.go

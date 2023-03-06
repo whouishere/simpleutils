@@ -10,13 +10,14 @@ If you notice something can be better, especially more simple, please contribute
 ## Progress
 <div style="text-align: center;">
 
-| Utility | Completed | Notes |
-| ------- | --------- | ----- |
-| cat     | 🟨 | Functional |
-| dirname | ✅ |            |
-| pwd     | ✅ |            |
-| rmdir   | ✅ |            |
-| whoami  | ✅ |            |
+| Utility  | Completed | Notes |
+| -------- | --------- | ----- |
+| cat      | 🟨 | Functional |
+| dirname  | ✅ |            |
+| printenv | ✅ |            |
+| pwd      | ✅ |            |
+| rmdir    | ✅ |            |
+| whoami   | ✅ |            |
 
 </div>
 
