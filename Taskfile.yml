@@ -13,4 +13,5 @@ tasks:
       - go build -o build/printenv -ldflags="{{.LDFLAGS}}" ./coreutils/printenv/printenv.go
       - go build -o build/pwd -ldflags="{{.LDFLAGS}}" ./coreutils/pwd/pwd.go
       - go build -o build/rmdir -ldflags="{{.LDFLAGS}}" ./coreutils/rmdir/rmdir.go
+      - go build -o build/true -ldflags="{{.LDFLAGS}}" ./coreutils/true/true.go
       - go build -o build/whoami -ldflags="{{.LDFLAGS}}" ./coreutils/whoami/whoami.go

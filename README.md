@@ -17,6 +17,7 @@ If you notice something can be better, especially more simple, please contribute
 | printenv | ✅ |            |
 | pwd      | ✅ |            |
 | rmdir    | ✅ |            |
+| true     | ✅ |            |
 | whoami   | ✅ |            |
 
 </div>
