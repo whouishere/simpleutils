@@ -16,3 +16,7 @@ tasks:
       - go build -o build/rmdir -ldflags="{{.LDFLAGS}}" ./coreutils/rmdir/rmdir.go
       - go build -o build/true -ldflags="{{.LDFLAGS}}" ./coreutils/true/true.go
       - go build -o build/whoami -ldflags="{{.LDFLAGS}}" ./coreutils/whoami/whoami.go
+  
+  test:
+    cmds:
+      - go test ./coreutils/...
