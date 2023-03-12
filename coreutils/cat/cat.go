@@ -5,10 +5,13 @@ import (
 	"fmt"
 	"os"
 	"os/signal"
+	"strconv"
+	"strings"
 	"syscall"
 
 	"codeberg.org/whou/simpleutils/internal/cmd"
 	myio "codeberg.org/whou/simpleutils/internal/io"
+	"codeberg.org/whou/simpleutils/internal/util"
 )
 
 var binary = "cat"
@@ -18,8 +21,17 @@ If no FILE is given, or if FILE is -, the standard input is read.
 
 `
 
+var numberFlag *cmd.Flag[bool]
+
 func runFlags() {
 	cmd.Init(binary, usage, binary, binary)
+
+	numberFlag = cmd.NewFlag(false,
+		"number", "n",
+		"number all output lines",
+		nil)
+	cmd.RegisterFlag(numberFlag)
+
 	cmd.Parse()
 }
 
@@ -27,12 +39,31 @@ func runFlags() {
 func scan(files []*os.File, isDone *bool) {
 	for _, file := range files {
 		scanner := bufio.NewScanner(file)
+
+		count := 1
 		for scanner.Scan() {
+			// print line count before each line
+			if *numberFlag.Value {
+				linecount := ""
+				digits := util.LenInt(count)
+
+				// the maximum amount of prefix spaces is 5, when there's 1 digit
+				if digits <= 6 && digits > -1 {
+					linecount = strings.Repeat(" ", 6-digits)
+				}
+
+				linecount += strconv.Itoa(count) + "  "
+
+				fmt.Print(linecount)
+			}
+
 			fmt.Println(scanner.Text())
 
 			if *isDone {
 				break
 			}
+
+			count++
 		}
 
 		if err := scanner.Err(); err != nil {
