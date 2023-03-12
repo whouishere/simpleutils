@@ -1,7 +1,6 @@
 package main
 
 import (
-	"bufio"
 	"fmt"
 	"os"
 	"os/signal"
@@ -22,6 +21,7 @@ If no FILE is given, or if FILE is -, the standard input is read.
 `
 
 var numberFlag *cmd.Flag[bool]
+var unbufferedFlag *cmd.Flag[bool]
 
 func runFlags() {
 	cmd.Init(binary, usage, binary, binary)
@@ -32,43 +32,64 @@ func runFlags() {
 		nil)
 	cmd.RegisterFlag(numberFlag)
 
+	// this flag behaviour is the default, thus it is ignored.
+	unbufferedFlag = cmd.NewFlag(false,
+		"u", "u",
+		"(ignored)",
+		nil)
+	cmd.RegisterFlag(unbufferedFlag)
+
 	cmd.Parse()
+}
+
+func printLineCount(count int) {
+	linecount := ""
+	digits := util.LenInt(count)
+
+	// the maximum amount of prefix spaces is 5, when there's 1 digit
+	if digits <= 6 && digits > -1 {
+		linecount = strings.Repeat(" ", 6-digits)
+	}
+
+	linecount += strconv.Itoa(count) + "  "
+
+	fmt.Print(linecount)
 }
 
 // scan given file list
 func scan(files []*os.File, isDone *bool) {
 	for _, file := range files {
-		scanner := bufio.NewScanner(file)
+		stat, err := file.Stat()
+		if err != nil {
+			panic(err)
+		}
+
+		filelen := stat.Size()
+		bytes := make([]byte, filelen)
+
+		_, err = file.Read(bytes)
+		if err != nil {
+			panic(err)
+		}
+
+		lines := strings.Split(string(bytes), "\n")
+		lines = lines[:len(lines)-1]
 
 		count := 1
-		for scanner.Scan() {
-			// print line count before each line
+		for _, line := range lines {
 			if *numberFlag.Value {
-				linecount := ""
-				digits := util.LenInt(count)
-
-				// the maximum amount of prefix spaces is 5, when there's 1 digit
-				if digits <= 6 && digits > -1 {
-					linecount = strings.Repeat(" ", 6-digits)
-				}
-
-				linecount += strconv.Itoa(count) + "  "
-
-				fmt.Print(linecount)
+				printLineCount(count)
 			}
 
-			fmt.Println(scanner.Text())
-
-			if *isDone {
-				break
-			}
-
+			fmt.Println(line)
 			count++
 		}
 
-		if err := scanner.Err(); err != nil {
-			panic(err)
+		if *isDone {
+			break
 		}
+
+		continue
 	}
 }
 

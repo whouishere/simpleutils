@@ -14,5 +14,5 @@
   - [ ] --squeeze-blank
   - [ ] -t
   - [ ] --show-tabs
-  - [ ] -u
+  - [X] -u
   - [ ] --show-nonprinting
