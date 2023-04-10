@@ -13,30 +13,24 @@ var usage = `Usage: %s [OPTION]... DIRECTORY...
 
 `
 
-var nonemptyFlag *cmd.Flag[bool]
-var parentsFlag *cmd.Flag[bool]
-var verboseFlag *cmd.Flag[bool]
+var nonemptyFlag *bool
+var parentsFlag *bool
+var verboseFlag *bool
 
 func runFlags() {
 	cmd.Init(binary, usage, binary, binary)
 
 	parentsFlag = cmd.NewFlag(false,
 		"parents", "p",
-		"remove DIRECTORY and its empty parents",
-		nil)
-	cmd.RegisterFlag(parentsFlag)
+		"remove DIRECTORY and its empty parents")
 
 	nonemptyFlag = cmd.NewFlag(false,
 		"ignore-fail-on-non-empty", "ignore-fail-on-non-empty",
-		"ignore any fails solely because of non-empty directories",
-		nil)
-	cmd.RegisterFlag(nonemptyFlag)
+		"ignore any fails solely because of non-empty directories")
 
 	verboseFlag = cmd.NewFlag(false,
 		"verbose", "v",
-		"ouput verbose messages for every processed directory",
-		nil)
-	cmd.RegisterFlag(verboseFlag)
+		"ouput verbose messages for every processed directory")
 
 	cmd.Parse()
 }
@@ -56,18 +50,18 @@ func parentRemove(rmdir string) {
 	}
 
 	// remove empty parents
-	*parentsFlag.Value = false
+	*parentsFlag = false
 	for i := len(parents) - 1; i >= 0; i-- { // reverse iterate
 		removeDir(parents[i])
 	}
 	// the flag is temporarily disabled to avoid recursion
-	*parentsFlag.Value = true
+	*parentsFlag = true
 }
 
 func removeDir(rmdir string) {
 	cmd.SetErrorPrefix("Failed to remove '", rmdir, "'.")
 
-	if *verboseFlag.Value {
+	if *verboseFlag {
 		cmd.Log("Removing directory '", rmdir, "'.")
 	}
 
@@ -100,10 +94,10 @@ func removeDir(rmdir string) {
 			panic(err)
 		}
 
-		if *parentsFlag.Value {
+		if *parentsFlag {
 			parentRemove(rmdir)
 		}
-	} else if !*nonemptyFlag.Value {
+	} else if !*nonemptyFlag {
 		cmd.FatalError("Directory is not empty.")
 	}
 }

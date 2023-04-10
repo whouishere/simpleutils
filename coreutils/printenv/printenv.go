@@ -13,16 +13,14 @@ var usage = `Usage: %s [OPTION] [VARIABLE]...
 
 `
 
-var nullFlag *cmd.Flag[bool]
+var nullFlag *bool
 
 func runFlags() {
 	cmd.Init(binary, usage, binary, binary)
 
 	nullFlag = cmd.NewFlag(false,
 		"null", "0",
-		"end each output line with a NUL byte rather than a newline",
-		nil)
-	cmd.RegisterFlag(nullFlag)
+		"end each output line with a NUL byte rather than a newline")
 
 	cmd.Parse()
 }
@@ -31,7 +29,7 @@ func printAllEnv() {
 	variables := os.Environ()
 
 	for _, env := range variables {
-		if *nullFlag.Value {
+		if *nullFlag {
 			fmt.Print(env)
 		} else {
 			fmt.Println(env)
@@ -50,7 +48,7 @@ func main() {
 	}
 
 	for _, arg := range args {
-		if *nullFlag.Value {
+		if *nullFlag {
 			fmt.Print(os.Getenv(arg))
 		} else {
 			fmt.Println(os.Getenv(arg))

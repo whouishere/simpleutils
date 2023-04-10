@@ -14,23 +14,19 @@ var usage = `Usage: %s [OPTION]...
 
 `
 
-var logicalFlag *cmd.Flag[bool]
-var physicalFlag *cmd.Flag[bool]
+var logicalFlag *bool
+var physicalFlag *bool
 
 func runFlags() {
 	cmd.Init(binary, usage, binary, binary)
 
 	logicalFlag = cmd.NewFlag(false,
 		"logical", "L",
-		"output absolute working directory, keeping symbolic links",
-		nil)
-	cmd.RegisterFlag(logicalFlag)
+		"output absolute working directory, keeping symbolic links")
 
 	physicalFlag = cmd.NewFlag(false,
 		"physical", "P",
-		"output the physical working path, with resolved symbolic links",
-		nil)
-	cmd.RegisterFlag(physicalFlag)
+		"output the physical working path, with resolved symbolic links")
 
 	cmd.Parse()
 }
@@ -47,14 +43,14 @@ func main() {
 		panic(err)
 	}
 
-	if *logicalFlag.Value {
+	if *logicalFlag {
 		cwd, err = filepath.Abs(cwd)
 		if err != nil {
 			panic(err)
 		}
 	}
 
-	if *physicalFlag.Value {
+	if *physicalFlag {
 		cwd, err = filepath.EvalSymlinks(cwd)
 		if err != nil {
 			panic(err)

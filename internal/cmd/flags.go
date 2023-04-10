@@ -3,99 +3,54 @@ package cmd
 import (
 	"fmt"
 	"os"
-	"strings"
 
 	"codeberg.org/whou/simpleutils/coreutils"
-	flag "github.com/erikjuhani/miniflag"
+	flag "github.com/spf13/pflag"
 )
 
-var versionFlag *Flag[bool]
-
-type Flag[T any] struct {
-	Value        *T
-	defaultValue T
-	name         string
-	shorthand    string
-	usage        string
-	Function     func()
-}
+var versionFlag *bool
+var helpFlag *bool
 
 func Init(binary, usage string, format ...any) {
 	// modify default usage text
-	flag.CommandLine.Usage = func() {
-		fmt.Fprintf(flag.CommandLine.Output(), usage, format...)
-		flag.CommandLine.PrintDefaults()
+	flag.Usage = func() {
+		fmt.Fprintf(os.Stderr, usage, format...)
+		flag.PrintDefaults()
 	}
 
 	coreutils.Binary = binary
 
-	// universal version flag
-	versionFlag = NewFlag(false, "version", "version", "print version info and exit", func() {
-		fmt.Printf("%s version %s\n", binary, coreutils.Version)
-		os.Exit(0)
-	})
-	RegisterFlag(versionFlag)
+	// universal flags
+	versionFlag = NewFlag(false, "version", "version", "print version info and exit")
+	helpFlag = NewFlag(false, "help", "help", "display this help text and exit")
 }
 
 func Parse() {
+	// FIXME?: internally error is printed twice, which is weird
+	// this bug might be unfixable on the user side (check library repo)
 	flag.Parse()
 
-	if *versionFlag.Value {
-		versionFlag.Function()
+	if *versionFlag {
+		fmt.Printf("%s version %s\n", coreutils.Binary, coreutils.Version)
+		os.Exit(0)
+	}
+
+	if *helpFlag {
+		flag.Usage()
+		os.Exit(0)
 	}
 }
 
-// ignore undefined flags error by removing them from the argument list
+// whitelist unknown flags
 func IgnoreUndefinedFlags() {
-	args := GetArgs()
-	if args == nil {
-		return
-	}
-
-	// returns the index of a slice element
-	indexOf := func(slice []string, element string) int {
-		for k, v := range slice {
-			if element == v {
-				return k
-			}
-		}
-		return -1 // not found.
-	}
-
-	// returns the slice with a removed element
-	remove := func(slice []string, s string) []string {
-		return append(slice[:indexOf(slice, s)], slice[indexOf(slice, s)+1:]...)
-	}
-
-	for _, arg := range args {
-		if arg[0] == '-' {
-			splitindex := 1
-			if len(arg) > 1 && arg[1] == '-' {
-				splitindex = 2
-			}
-
-			search := flag.CommandLine.Lookup(strings.Split(arg, "-")[splitindex])
-
-			if arg == "-h" || arg == "--help" || arg == "-help" || search != nil {
-				continue
-			}
-
-			os.Args = remove(os.Args, arg)
-		}
-	}
+	flag.CommandLine.ParseErrorsWhitelist.UnknownFlags = true
 }
 
-func NewFlag[T any](value T, name, shorthand, usage string, function func()) *Flag[T] {
-	return &Flag[T]{
-		defaultValue: value,
-		name:         name,
-		shorthand:    shorthand,
-		usage:        usage,
-		Function:     function,
+// return a new boolean pointer
+func NewFlag(value bool, name, shorthand, usage string) *bool {
+	if shorthand != name {
+		return flag.BoolP(name, shorthand, value, usage)
 	}
-}
 
-// registers every passed command-line flag
-func RegisterFlag[T any](flagVar *Flag[T]) {
-	flagVar.Value = flag.Flag(flagVar.name, flagVar.shorthand, flagVar.defaultValue, flagVar.usage)
+	return flag.Bool(name, value, usage)
 }

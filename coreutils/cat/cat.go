@@ -20,24 +20,20 @@ If no FILE is given, or if FILE is -, the standard input is read.
 
 `
 
-var numberFlag *cmd.Flag[bool]
-var unbufferedFlag *cmd.Flag[bool]
+var numberFlag *bool
+var unbufferedFlag *bool
 
 func runFlags() {
 	cmd.Init(binary, usage, binary, binary)
 
 	numberFlag = cmd.NewFlag(false,
 		"number", "n",
-		"number all output lines",
-		nil)
-	cmd.RegisterFlag(numberFlag)
+		"number all output lines")
 
 	// this flag behaviour is the default, thus it is ignored.
 	unbufferedFlag = cmd.NewFlag(false,
 		"u", "u",
-		"(ignored)",
-		nil)
-	cmd.RegisterFlag(unbufferedFlag)
+		"(ignored)")
 
 	cmd.Parse()
 }
@@ -77,7 +73,7 @@ func scan(files []*os.File, isDone *bool) {
 
 		count := 1
 		for _, line := range lines {
-			if *numberFlag.Value {
+			if *numberFlag {
 				printLineCount(count)
 			}
 
