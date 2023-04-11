@@ -6,17 +6,52 @@ vars:
 
 tasks:
   build:
+    desc: Builds every utility on the `build` directory.
     cmds:
       - mkdir -p build
-      - go build -o build/cat -ldflags="{{.LDFLAGS}}" ./coreutils/cat/cat.go
-      - go build -o build/dirname -ldflags="{{.LDFLAGS}}" ./coreutils/dirname/dirname.go
-      - go build -o build/false -ldflags="{{.LDFLAGS}}" ./coreutils/false/false.go
-      - go build -o build/printenv -ldflags="{{.LDFLAGS}}" ./coreutils/printenv/printenv.go
-      - go build -o build/pwd -ldflags="{{.LDFLAGS}}" ./coreutils/pwd/pwd.go
-      - go build -o build/rmdir -ldflags="{{.LDFLAGS}}" ./coreutils/rmdir/rmdir.go
-      - go build -o build/true -ldflags="{{.LDFLAGS}}" ./coreutils/true/true.go
-      - go build -o build/whoami -ldflags="{{.LDFLAGS}}" ./coreutils/whoami/whoami.go
+      - task: build-util
+        vars: 
+          UTIL: cat
+      
+      - task: build-util
+        vars: 
+          UTIL: dirname
+      
+      - task: build-util
+        vars: 
+          UTIL: false
+      
+      - task: build-util
+        vars: 
+          UTIL: printenv
+      
+      - task: build-util
+        vars: 
+          UTIL: pwd
+      
+      - task: build-util
+        vars: 
+          UTIL: rmdir
+      
+      - task: build-util
+        vars: 
+          UTIL: true
+      
+      - task: build-util
+        vars: 
+          UTIL: whoami
   
+  build-util:
+    internal: true
+    cmds:
+      - go build -o build/{{.UTIL}} -ldflags="{{.LDFLAGS}}" ./coreutils/{{.UTIL}}/{{.UTIL}}.go
+
   test:
+    desc: Runs every utility test.
     cmds:
       - go test ./coreutils/...
+  
+  run:
+    desc: "Run a defined utility on the `UTIL` environment variable using `go run`. Example: `task run UTIL=cat -- --help`"
+    cmds:
+      - go run ./coreutils/{{.UTIL}}/{{.UTIL}}.go {{.CLI_ARGS}}
