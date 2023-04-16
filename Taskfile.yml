@@ -50,6 +50,7 @@ tasks:
     desc: Runs every utility test.
     cmds:
       - go test ./coreutils/...
+      - go test ./internal/...
   
   run:
     desc: "Run a defined utility on the `UTIL` environment variable using `go run`. Example: `task run UTIL=cat -- --help`"
