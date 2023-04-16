@@ -32,7 +32,7 @@ func runFlags() {
 
 	// this flag behaviour is the default, thus it is ignored.
 	unbufferedFlag = cmd.NewFlag(false,
-		"u", "u",
+		"", "u",
 		"(ignored)")
 
 	cmd.Parse()

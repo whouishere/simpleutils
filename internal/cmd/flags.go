@@ -5,7 +5,7 @@ import (
 	"os"
 
 	"codeberg.org/whou/simpleutils/coreutils"
-	flag "github.com/spf13/pflag"
+	flag "github.com/cornfeedhobo/pflag"
 )
 
 var versionFlag *bool
@@ -21,8 +21,8 @@ func Init(binary, usage string, format ...any) {
 	coreutils.Binary = binary
 
 	// universal flags
-	versionFlag = NewFlag(false, "version", "version", "print version info and exit")
-	helpFlag = NewFlag(false, "help", "help", "display this help text and exit")
+	versionFlag = NewFlag(false, "version", "", "print version info and exit")
+	helpFlag = NewFlag(false, "help", "", "display this help text and exit")
 }
 
 func Parse() {
@@ -48,9 +48,9 @@ func IgnoreUndefinedFlags() {
 
 // return a new boolean pointer
 func NewFlag(value bool, name, shorthand, usage string) *bool {
-	if shorthand != name {
-		return flag.BoolP(name, shorthand, value, usage)
+	if name == "" {
+		return flag.BoolS(shorthand, shorthand, value, usage)
 	}
 
-	return flag.Bool(name, value, usage)
+	return flag.BoolP(name, shorthand, value, usage)
 }

@@ -25,7 +25,7 @@ func runFlags() {
 		"remove DIRECTORY and its empty parents")
 
 	nonemptyFlag = cmd.NewFlag(false,
-		"ignore-fail-on-non-empty", "ignore-fail-on-non-empty",
+		"ignore-fail-on-non-empty", "",
 		"ignore any fails solely because of non-empty directories")
 
 	verboseFlag = cmd.NewFlag(false,
