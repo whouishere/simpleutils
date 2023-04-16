@@ -16,7 +16,13 @@ This is a test for command-line flags functionality.
 
 `
 	Init(binary, usage, binary)
+	IgnoreUndefinedFlags()
 	os.Args = append(os.Args, args...)
+
+	var _ = NewFlag(false, "", "s", "shorthand-only flag")
+	var _ = NewFlag(false, "long", "", "longform-only flag")
+	var _ = NewFlag(false, "both", "b", "long flag with a shorthand")
+
 	Parse()
 }
 
@@ -42,7 +48,10 @@ func TestHelpFlag(t *testing.T) {
 	outUsage := `Usage: flagtest [OPTION]... [FILE]...
 This is a test for command-line flags functionality.
 
+  -b, --both      long flag with a shorthand
       --help      display this help text and exit
+      --long      longform-only flag
+  -s              shorthand-only flag
       --version   print version info and exit
 `
 
