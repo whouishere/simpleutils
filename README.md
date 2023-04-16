@@ -25,6 +25,7 @@ If you just want to test out some utility though, you can use the `task run UTIL
 | printenv | ✅ |            |
 | pwd      | ✅ |            |
 | rmdir    | ✅ |            |
+| touch    | 🟨 | Basic functionality only |
 | true     | ✅ |            |
 | whoami   | ✅ |            |
 

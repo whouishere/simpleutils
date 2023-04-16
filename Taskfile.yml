@@ -35,6 +35,10 @@ tasks:
       
       - task: build-util
         vars: 
+          UTIL: touch
+      
+      - task: build-util
+        vars: 
           UTIL: true
       
       - task: build-util
