@@ -4,6 +4,8 @@ import (
 	"os"
 	"time"
 
+	"github.com/djherbis/atime"
+
 	"codeberg.org/whou/simpleutils/internal/cmd"
 	myio "codeberg.org/whou/simpleutils/internal/io"
 )
@@ -16,15 +18,50 @@ If a FILE doesn't exist, it is created empty.
 
 `
 
+var noCreateFlag *bool
+var accessFlag *bool
+var modificationFlag *bool
+
 func runFlags() {
 	cmd.Init(binary, usage, binary, binary)
+
+	noCreateFlag = cmd.NewFlag(false,
+		"no-create", "c",
+		"do not create any files")
+
+	accessFlag = cmd.NewFlag(false,
+		"", "a",
+		"change only the access time")
+
+	modificationFlag = cmd.NewFlag(false,
+		"", "m",
+		"change only the modification time")
 
 	cmd.Parse()
 }
 
-func touchFiles(time time.Time, files []*os.File) {
+func touchFiles(changeTime time.Time, files []*os.File) {
+	var aTime = changeTime
+	var mTime = changeTime
+
 	for _, file := range files {
-		err := os.Chtimes(file.Name(), time, time)
+		// if either -a or -m were used, keep the time of the one that wasn't selected
+		if *accessFlag || *modificationFlag {
+			info, err := file.Stat()
+			if err != nil {
+				panic(err)
+			}
+
+			if !*accessFlag {
+				aTime = atime.Get(info)
+			}
+
+			if !*modificationFlag {
+				mTime = info.ModTime()
+			}
+		}
+
+		err := os.Chtimes(file.Name(), aTime, mTime)
 		if err != nil {
 			panic(err)
 		}
@@ -48,11 +85,13 @@ func getFiles() []*os.File {
 			if err != nil {
 				panic(err)
 			}
-		} else {
+		} else if !*noCreateFlag {
 			file, err = os.Create(path)
 			if err != nil {
 				panic(err)
 			}
+		} else {
+			continue
 		}
 
 		files = append(files, file)
