@@ -22,6 +22,7 @@ If you just want to test out some utility though, you can use the `task run UTIL
 | cat      | 🟨 | Functional |
 | dirname  | ✅ |            |
 | false    | ✅ |            |
+| mkdir    | 🟨 | Basic functionality only |
 | printenv | ✅ |            |
 | pwd      | ✅ |            |
 | rmdir    | ✅ |            |

@@ -61,6 +61,7 @@ func parentRemove(rmdir string) {
 func removeDir(rmdir string) {
 	cmd.SetErrorPrefix("Failed to remove '", rmdir, "'.")
 
+	// the verbose print is before the "file exists" check on GNU and BusyBox, for some reason
 	if *verboseFlag {
 		cmd.Log("Removing directory '", rmdir, "'.")
 	}
