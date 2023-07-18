@@ -2,6 +2,7 @@ package io
 
 import (
 	"os"
+	"strings"
 )
 
 // Returns true if a file exists
@@ -22,6 +23,12 @@ func FileExists(path string) (bool, error) {
 func FileIsDir(path string) (bool, error) {
 	file, err := os.Stat(path)
 	return file.IsDir(), err
+}
+
+// Returns the basename of a file from a filepath string
+func GetFilepathBasename(filepath string) string {
+	paths := strings.Split(filepath, "/")
+	return paths[len(paths)-1]
 }
 
 // Recursively checks if a directory does not have any files.

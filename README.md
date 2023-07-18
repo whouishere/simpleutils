@@ -37,6 +37,7 @@ Replace `<utility>` with your desired utility (`cat`, for example) and `<argumen
 | Utility  | Completed | Notes |
 | -------- | --------- | ----- |
 | cat      | 🟨 | Functional |
+| cp       | 🟨 | Simple file copies only |
 | dirname  | ✅ |            |
 | false    | ✅ |            |
 | mkdir    | 🟨 | Basic functionality only |
