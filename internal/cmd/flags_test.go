@@ -28,7 +28,7 @@ This is a test for command-line flags functionality.
 
 func TestVersionFlag(t *testing.T) {
 	args = []string{"--version"}
-	out, err := test.GetOutput(initFakeFlags, t.Name())
+	out, err := test.GetFuncOutput(initFakeFlags, t.Name())
 	if err != nil {
 		t.Fatalf("output: %s\nerr: %s", out, err)
 	}
@@ -40,7 +40,7 @@ func TestVersionFlag(t *testing.T) {
 
 func TestHelpFlag(t *testing.T) {
 	args = []string{"--help"}
-	out, err := test.GetOutput(initFakeFlags, t.Name())
+	out, err := test.GetFuncOutput(initFakeFlags, t.Name())
 	if err != nil {
 		t.Fatalf("output: %s\nerr: %s", out, err)
 	}

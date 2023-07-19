@@ -3,18 +3,10 @@ COREUTILS = cat cp dirname false mkdir printenv pwd rmdir touch true whoami
 VERSION = 0.0.1
 LDFLAGS = -X 'codeberg.org/whou/simpleutils/coreutils.Version=$(VERSION)'
 
-BUILD_DIR = build
-INSTALL_DIR =
-BIN_PREFIX =
+BUILD_DIR ?= build
+INSTALL_DIR ?= ~/.local/bin
+BIN_PREFIX ?= su-
 BIN_SUFIX =
-
-ifeq ($(PREFIX),)
-	INSTALL_DIR := ~/.local/bin
-endif
-
-ifeq ($(BIN_PREFIX),)
-	BIN_PREFIX := su-
-endif
 
 ifeq ($(OS),Windows_NT)
 	BIN_SUFIX += .exe

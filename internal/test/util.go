@@ -9,7 +9,7 @@ import (
 // return the function exit code (from os.Exit)
 //
 // returns -1 and an error if the function process hasn't exited, was terminated by a signal, triggered and error, or if the function didn't exit by itself
-func GetExitCode(function func(), testName string) (int, error) {
+func GetFuncExitCode(function func(), testName string) (int, error) {
 	// avoid process loop
 	if os.Getenv("IS_TEST") == "1" {
 		function()
@@ -34,7 +34,7 @@ func GetExitCode(function func(), testName string) (int, error) {
 }
 
 // get the stdout and stderr from a function
-func GetOutput(function func(), testName string) (string, error) {
+func GetFuncOutput(function func(), testName string) (string, error) {
 	// avoid process loop
 	if os.Getenv("IS_TEST") == "1" {
 		function()
@@ -44,6 +44,14 @@ func GetOutput(function func(), testName string) (string, error) {
 
 	cmd := exec.Command(os.Args[0], fmt.Sprintf("-test.run=%s", testName))
 	cmd.Env = append(os.Environ(), "IS_TEST=1")
+	out, err := cmd.CombinedOutput()
+
+	return string(out), err
+}
+
+// get a command's stdout
+func GetCmdOutput(command string) (string, error) {
+	cmd := exec.Command(command)
 	out, err := cmd.CombinedOutput()
 
 	return string(out), err

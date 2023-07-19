@@ -1,4 +1,7 @@
 # simpleutils
+
+[![build status](https://github.com/whouishere/simpleutils/actions/workflows/build.yml/badge.svg)](https://github.com/whouishere/simpleutils/actions)
+
 simpleutils is as an alternative (though not a replacement) coreutils package.
 
 Note that simpleutils is not supposed to be a full and 100% faithful replacement for GNU coreutils nor it is meant to be POSIX complient.

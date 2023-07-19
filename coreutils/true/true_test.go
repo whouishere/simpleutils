@@ -7,7 +7,7 @@ import (
 )
 
 func TestTrue(t *testing.T) {
-	code, err := test.GetExitCode(main, t.Name())
+	code, err := test.GetFuncExitCode(main, t.Name())
 
 	if code != 0 {
 		t.Fatalf("Process ran with err \"%v\", expected exit status 0.", err)
