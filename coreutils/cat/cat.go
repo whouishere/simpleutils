@@ -1,6 +1,7 @@
 package main
 
 import (
+	"bufio"
 	"fmt"
 	"os"
 	"os/signal"
@@ -21,7 +22,6 @@ If no FILE is given, or if FILE is -, the standard input is read.
 `
 
 var numberFlag *bool
-var unbufferedFlag *bool
 
 func runFlags() {
 	cmd.Init(binary, usage, binary, binary)
@@ -31,7 +31,7 @@ func runFlags() {
 		"number all output lines")
 
 	// this flag behaviour is the default, thus it is ignored.
-	unbufferedFlag = cmd.NewFlag(false,
+	_ = cmd.NewFlag(false,
 		"", "u",
 		"(ignored)")
 
@@ -52,58 +52,84 @@ func printLineCount(count int) {
 	fmt.Print(linecount)
 }
 
-// scan given file list
-func scan(files []*os.File, isDone *bool) {
-	for _, file := range files {
-		stat, err := file.Stat()
+// scans STDIN and return count
+func scanStdin(count int) int {
+	reader := bufio.NewReader(os.Stdin)
+
+	for {
+		line, err := reader.ReadString('\n')
 		if err != nil {
-			panic(err)
-		}
-
-		filelen := stat.Size()
-		bytes := make([]byte, filelen)
-
-		_, err = file.Read(bytes)
-		if err != nil {
-			panic(err)
-		}
-
-		lines := strings.Split(string(bytes), "\n")
-		lines = lines[:len(lines)-1]
-
-		count := 1
-		for _, line := range lines {
-			if *numberFlag {
-				printLineCount(count)
+			if err.Error() == "EOF" {
+				return count
 			}
 
-			fmt.Println(line)
-			count++
+			panic(err)
 		}
 
+		if *numberFlag {
+			printLineCount(count)
+		}
+
+		fmt.Print(line)
+		count++
+	}
+}
+
+// scan file and return count
+func scan(file *os.File, count int, isDone *bool) int {
+	stat, err := file.Stat()
+	if err != nil {
+		panic(err)
+	}
+
+	filelen := stat.Size()
+	bytes := make([]byte, filelen)
+
+	_, err = file.Read(bytes)
+	if err != nil {
+		panic(err)
+	}
+
+	lines := strings.SplitAfter(string(bytes), "\n")
+
+	for _, line := range lines {
+		if *isDone {
+			return count
+		}
+
+		if *numberFlag {
+			printLineCount(count)
+		}
+
+		fmt.Print(line)
+		count++
+	}
+
+	fmt.Print("\n")
+	return count
+}
+
+// get files from the command-line arguments
+func scanFiles(isDone *bool) {
+	count := 1
+
+	// if no flags are passed, just read from STDIN
+	paths := cmd.GetNonFlags()
+	if paths == nil {
+		paths = []string{"-"}
+	}
+
+	for _, path := range paths {
 		if *isDone {
 			break
 		}
 
-		continue
-	}
-}
-
-// get files from the command-line arguments
-func getFiles() []*os.File {
-	var files []*os.File
-
-	// if no flags are passed, just read from STDIN
-	// we don't use flag.Args() because it doesn't detect '-' only args
-	paths := cmd.GetNonFlags()
-	if paths == nil {
-		return []*os.File{os.Stdin}
-	}
-
-	for _, path := range paths {
-		// if argument is "-" add STDIN to read
+		// if argument is "-", read from STDIN
 		if path == "-" {
-			files = append(files, os.Stdin)
+			count = scanStdin(count)
+			if *isDone {
+				break
+			}
 			continue
 		}
 
@@ -112,25 +138,24 @@ func getFiles() []*os.File {
 			panic(err)
 		}
 
-		if exist {
-			file, err := os.Open(path)
-			if err != nil {
-				panic(nil)
-			}
-
-			files = append(files, file)
+		if !exist {
+			cmd.Error(path, ": No such file or directory")
+			continue
 		}
-	}
 
-	return files
+		file, err := os.Open(path)
+		if err != nil {
+			panic(nil)
+		}
+
+		count = scan(file, count, isDone)
+	}
 }
 
 func main() {
 	var done bool = false
 
 	runFlags()
-
-	files := getFiles()
 
 	// politely stop when termination signal (Ctrl + C) is received
 	sigs := make(chan os.Signal, 1)
@@ -140,7 +165,7 @@ func main() {
 		done = true
 	}()
 
-	scan(files, &done)
+	scanFiles(&done)
 
 	os.Exit(0)
 }
