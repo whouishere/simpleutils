@@ -46,6 +46,7 @@ Replace `<utility>` with your desired utility (`cat`, for example) and `<argumen
 | mkdir    | 🟨 | Basic functionality only |
 | printenv | ✅ |            |
 | pwd      | ✅ |            |
+| rm       | ✅ | Files only |
 | rmdir    | ✅ |            |
 | touch    | 🟨 | Basic functionality only |
 | true     | ✅ |            |
