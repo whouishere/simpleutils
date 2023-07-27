@@ -2,7 +2,6 @@ package cmd
 
 import (
 	"fmt"
-	"log"
 	"os"
 
 	"codeberg.org/whou/simpleutils/coreutils"
@@ -33,7 +32,8 @@ func FatalStderr(msg string, a ...any) {
 
 // Print error message and exit with code 1
 func FatalError(msg string, a ...any) {
-	log.Fatalf("%s: %s%s%s\n", coreutils.Binary, errorPrefix, msg, fmt.Sprint(a...))
+	fmt.Printf("%s: %s%s%s\n", coreutils.Binary, errorPrefix, msg, fmt.Sprint(a...))
+	os.Exit(1)
 }
 
 // Fatally prints an error message to stderr and recommend the help flag
