@@ -35,3 +35,8 @@ func FatalStderr(msg string, a ...any) {
 func FatalError(msg string, a ...any) {
 	log.Fatalf("%s: %s%s%s\n", coreutils.Binary, errorPrefix, msg, fmt.Sprint(a...))
 }
+
+// Fatally prints an error message to stderr and recommend the help flag
+func FatalHelpError(msg string, a ...any) {
+	FatalStderr(msg, fmt.Sprint(a...), "\nUse '", coreutils.Binary, " --help' for more information.")
+}

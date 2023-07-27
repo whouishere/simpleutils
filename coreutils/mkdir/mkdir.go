@@ -81,7 +81,7 @@ func main() {
 
 	args := cmd.GetNonFlags()
 	if args == nil {
-		cmd.FatalStderr("Missing command-line argument.\nUse '", binary, " --help' for more information.")
+		cmd.FatalHelpError("Missing command-line argument.")
 	}
 
 	for _, arg := range args {

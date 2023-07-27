@@ -69,10 +69,9 @@ func touchFiles(changeTime time.Time, files []*os.File) {
 }
 
 // get existent and non-existent files
-func getFiles() []*os.File {
+func getFiles(paths []string) []*os.File {
 	var files []*os.File
 
-	paths := cmd.GetNonFlags()
 	for _, path := range paths {
 		exists, err := myio.FileExists(path)
 		if err != nil {
@@ -101,10 +100,15 @@ func getFiles() []*os.File {
 }
 
 func main() {
-	now := time.Now().Local()
 	runFlags()
 
-	files := getFiles()
+	args := cmd.GetNonFlags()
+	if args == nil {
+		cmd.FatalHelpError("Missing command-line argument.")
+	}
+
+	now := time.Now().Local()
+	files := getFiles(args)
 	touchFiles(now, files)
 
 	os.Exit(0)

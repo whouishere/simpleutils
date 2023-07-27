@@ -91,9 +91,11 @@ func main() {
 	runFlags()
 
 	args := cmd.GetNonFlags()
-
+	if args == nil {
+		cmd.FatalHelpError("Missing command-line argument.")
+	}
 	if len(args) == 1 {
-		cmd.FatalStderr("Missing destination file after '", args[0], "'\nUse '", binary, " --help' for more information.")
+		cmd.FatalHelpError("Missing destination file after '", args[0], "'.")
 	}
 
 	sources := args[:len(args)-1]
