@@ -59,11 +59,11 @@ func parentRemove(rmdir string) {
 }
 
 func removeDir(rmdir string) {
-	cmd.SetErrorPrefix("Failed to remove '", rmdir, "'.")
+	cmd.SetErrorPrefix("Failed to remove '", rmdir, "'")
 
 	// the verbose print is before the "file exists" check on GNU and BusyBox, for some reason
 	if *verboseFlag {
-		cmd.Log("Removing directory '", rmdir, "'.")
+		cmd.Log("Removing directory '", rmdir, "'")
 	}
 
 	exist, err := myio.FileExists(rmdir)
@@ -71,7 +71,7 @@ func removeDir(rmdir string) {
 		panic(err)
 	}
 	if !exist {
-		cmd.FatalError("Directory does not exist.")
+		cmd.FatalError("Directory does not exist")
 	}
 
 	// open passed directory
@@ -99,7 +99,7 @@ func removeDir(rmdir string) {
 			parentRemove(rmdir)
 		}
 	} else if !*nonemptyFlag {
-		cmd.FatalError("Directory is not empty.")
+		cmd.FatalError("Directory is not empty")
 	}
 }
 
@@ -108,7 +108,7 @@ func main() {
 
 	args := cmd.GetNonFlags()
 	if args == nil {
-		cmd.FatalHelpError("Missing command-line argument.")
+		cmd.FatalHelpError("Missing command-line argument")
 	}
 
 	for _, arg := range args {

@@ -35,7 +35,7 @@ func main() {
 	runFlags()
 
 	if cmd.GetNonFlags() != nil {
-		cmd.Log("Ignoring non-option arguments.")
+		cmd.Log("Ignoring non-option arguments")
 	}
 
 	cwd, err := os.Getwd()

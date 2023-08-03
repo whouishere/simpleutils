@@ -26,7 +26,7 @@ func runFlags() {
 }
 
 func removeFile(filename string) {
-	cmd.SetErrorPrefix("Cannot remove '", filename, "'.")
+	cmd.SetErrorPrefix("Cannot remove '", filename, "'")
 
 	exist, err := myio.FileExists(filename)
 	if err != nil {
@@ -34,7 +34,7 @@ func removeFile(filename string) {
 	}
 	if !exist {
 		if !*forceFlag {
-			cmd.Error("No such file or directory.")
+			cmd.Error("No such file or directory")
 		}
 		return
 	}
@@ -44,7 +44,7 @@ func removeFile(filename string) {
 		panic(err)
 	}
 	if isDir {
-		cmd.Error("Is a directory.")
+		cmd.Error("Is a directory")
 		return
 	}
 
@@ -59,7 +59,7 @@ func main() {
 
 	args := cmd.GetNonFlags()
 	if args == nil {
-		cmd.FatalHelpError("Missing command-line argument.")
+		cmd.FatalHelpError("Missing command-line argument")
 	}
 
 	for _, arg := range args {

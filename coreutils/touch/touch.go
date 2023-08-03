@@ -104,7 +104,7 @@ func main() {
 
 	args := cmd.GetNonFlags()
 	if args == nil {
-		cmd.FatalHelpError("Missing command-line argument.")
+		cmd.FatalHelpError("Missing command-line argument")
 	}
 
 	now := time.Now().Local()

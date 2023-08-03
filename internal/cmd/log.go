@@ -11,7 +11,7 @@ var errorPrefix string
 
 // Set error prefix string displayed before error messages
 func SetErrorPrefix(msg string, a ...any) {
-	errorPrefix = fmt.Sprintf("%s%s ", msg, fmt.Sprint(a...))
+	errorPrefix = fmt.Sprintf("%s%s: ", msg, fmt.Sprint(a...))
 }
 
 // Print soft message-only log message

@@ -31,19 +31,19 @@ func runFlags() {
 }
 
 func makeDirs(dir string) {
-	cmd.SetErrorPrefix("Failed to create '", dir, "'.")
+	cmd.SetErrorPrefix("Failed to create '", dir, "'")
 
 	exist, err := myio.FileExists(dir)
 	if err != nil {
 		panic(err)
 	}
 	if exist && !*parentsFlag {
-		cmd.FatalError("File/directory already exists.")
+		cmd.FatalError("File/directory already exists")
 	}
 
 	// the verbose print is after the "file exists" check on GNU
 	if *verboseFlag {
-		cmd.Log("Creating directory '", dir, "'.")
+		cmd.Log("Creating directory '", dir, "'")
 	}
 
 	if *parentsFlag {
@@ -64,7 +64,7 @@ func makeDirs(dir string) {
 			}
 
 			for i := len(parents) - 1; i >= 0; i-- { // reverse iterate
-				cmd.Log("Creating directory '", parents[i], "'.")
+				cmd.Log("Creating directory '", parents[i], "'")
 			}
 		}
 	} else {
@@ -81,7 +81,7 @@ func main() {
 
 	args := cmd.GetNonFlags()
 	if args == nil {
-		cmd.FatalHelpError("Missing command-line argument.")
+		cmd.FatalHelpError("Missing command-line argument")
 	}
 
 	for _, arg := range args {
