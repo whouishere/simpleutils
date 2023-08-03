@@ -52,6 +52,13 @@ Replace `<utility>` with your desired utility (`cat`, for example) and `<argumen
 | true     | ✅ |            |
 | whoami   | ✅ |            |
 
+## Acknowledgements and references
+- [busybox](https://busybox.net/)
+- [GNU coreutils](https://www.gnu.org/software/coreutils/)
+- [uutils](https://github.com/uutils/coreutils)
+- [linux.die.net](https://linux.die.net/)
+- [pubs.opengroup.org](https://pubs.opengroup.org/onlinepubs/9699919799.2018edition/) (POSIX specifications)
+
 ## Main goals
 - [ ] Finish simpler programs
 - [ ] Make simpler programs feature complete and/or equivalent to GNU
