@@ -26,7 +26,8 @@ func copy(source, dest string) {
 		panic(err)
 	}
 	if !exist {
-		cmd.Error("Cannot find '", source, "': No such file or directory")
+		cmd.SetErrorPrefix("Cannot find '", source, "'")
+		cmd.Error("No such file or directory")
 		return
 	}
 
@@ -40,6 +41,8 @@ func copy(source, dest string) {
 	}
 
 	destNeedsTrailingSlash := false
+
+	cmd.SetErrorPrefix("Cannot copy to '", dest, "'")
 
 	exist, err = myio.FileExists(dest)
 	if err != nil {
@@ -55,8 +58,10 @@ func copy(source, dest string) {
 			}
 			destNeedsTrailingSlash = isDir
 		}
-	} else if dest[len(dest)-1] == '/' { // directory that doesn't exist
-		cmd.FatalError("Cannot copy to '", dest, "': Directory doesn't exist")
+	} else if dest[len(dest)-1] == '/' {
+		cmd.FatalError("Directory doesn't exist")
+	} else {
+		cmd.FatalError("No such file or directory")
 	}
 
 	// isDir represents dest
