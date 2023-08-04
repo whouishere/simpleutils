@@ -14,6 +14,7 @@ Remove (unlink) the FILE(s).
 `
 
 var forceFlag *bool
+var recursiveFlag *bool
 
 func runFlags() {
 	cmd.Init(binary, usage, binary)
@@ -21,6 +22,10 @@ func runFlags() {
 	forceFlag = cmd.NewFlag(false,
 		"force", "f",
 		"ignore nonexistent files")
+
+	recursiveFlag = cmd.NewFlag(false,
+		"recursive", "r",
+		"remove directories and their contents recursively")
 
 	cmd.Parse()
 }
@@ -39,16 +44,20 @@ func removeFile(filename string) {
 		return
 	}
 
-	isDir, err := myio.FileIsDir(filename)
-	if err != nil {
-		panic(err)
-	}
-	if isDir {
-		cmd.Error("Is a directory")
-		return
+	if !*recursiveFlag {
+		isDir, err := myio.FileIsDir(filename)
+		if err != nil {
+			panic(err)
+		}
+
+		if isDir {
+			cmd.Error("Is a directory")
+			return
+		}
 	}
 
-	err = os.Remove(filename)
+	// os.RemoveAll calls os.Remove first anyway
+	err = os.RemoveAll(filename)
 	if err != nil {
 		panic(err)
 	}
