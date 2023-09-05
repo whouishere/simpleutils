@@ -1,3 +1,16 @@
+// TODO:
+// - fix trailing newlines
+// - be able to exit STDIN with CTRL + D
+// - flags:
+//   --show-all
+//   --number-nonblank
+//   -e
+//   --show-ends
+//   --squeeze-blank
+//   -t
+//   --show-tabs
+//   --show-nonprinting
+
 package main
 
 import (

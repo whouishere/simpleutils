@@ -1,3 +1,14 @@
+// TODO:
+// - flags:
+//   -v, --verbose
+//   -f, --force
+//   -H
+//   -i, --interactive
+//   -L, --dereference
+//   -P, --no-dereference
+//   -p
+//   -r, --recursive
+
 package main
 
 import (

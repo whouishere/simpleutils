@@ -1,3 +1,10 @@
+// TODO:
+// - flags:
+//   -d, --date
+//   -f
+//   -r, --reference
+//   -t
+
 package main
 
 import (

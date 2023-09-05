@@ -1,3 +1,7 @@
+// TODO:
+// - flags:
+//   -m, --mode
+
 package main
 
 import (
