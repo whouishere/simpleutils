@@ -20,7 +20,8 @@ import (
 )
 
 var binary = "cp"
-var usage = `Usage: %s [OPTION]... SOURCE... DIRECTORY
+var usage = `Usage: %s [OPTION]... SOURCE DEST
+   or: %s [OPTION]... SOURCE... DIRECTORY
 Copy SOURCE to DEST, or multiple SOURCE(s) to DIRECTORY.
 
 `
@@ -32,6 +33,7 @@ func runFlags() {
 }
 
 func copy(source, dest string) {
+	// FIXME: trying to reference an existing file with a trailing slash panics
 	exist, err := myio.FileExists(source)
 	if err != nil {
 		panic(err)
