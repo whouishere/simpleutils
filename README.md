@@ -44,6 +44,7 @@ Replace `<utility>` with your desired utility (`cat`, for example) and `<argumen
 | dirname  | ✅ |            |
 | false    | ✅ |            |
 | mkdir    | 🟨 | Basic functionality only |
+| mv       | 🟨 | Basic functionality only |
 | printenv | ✅ |            |
 | pwd      | ✅ |            |
 | rm       | ✅ | Files only |
