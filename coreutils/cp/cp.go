@@ -14,6 +14,7 @@ package main
 import (
 	"io"
 	"os"
+	"path/filepath"
 
 	"codeberg.org/whou/simpleutils/internal/cmd"
 	myio "codeberg.org/whou/simpleutils/internal/io"
@@ -48,6 +49,8 @@ func copy(source, dest string) {
 	if err != nil {
 		panic(err)
 	}
+
+	// can't copy directories yet
 	if isDir {
 		cmd.Log("Recursive copy not supported; ommiting directory '", source, "'")
 		return
@@ -62,6 +65,7 @@ func copy(source, dest string) {
 		panic(err)
 	}
 	if exist {
+		// is dir
 		if dest[len(dest)-1] == '/' {
 			isDir = true
 		} else {
@@ -72,12 +76,30 @@ func copy(source, dest string) {
 			destNeedsTrailingSlash = isDir
 		}
 	} else if dest[len(dest)-1] == '/' {
+		// the directory in which the source would be pasted in doesn't exist
 		cmd.FatalError("Directory doesn't exist")
 	} else {
-		cmd.FatalError("No such file or directory")
+		// dest is not a directory, it's a file name
+		// check if the new file directory exists
+		path := filepath.Dir(dest)
+		exist, err = myio.FileExists(path)
+		if err != nil {
+			panic(err)
+		}
+		if !exist {
+			cmd.FatalError("No such file or directory")
+		}
+
+		pathIsDir, err := myio.FileIsDir(path)
+		if err != nil {
+			panic(err)
+		}
+		if !pathIsDir {
+			cmd.FatalError("No such file or directory")
+		}
 	}
 
-	// isDir represents dest
+	// if dest exists and is a dir we would like to explicit it with a slash
 	if isDir {
 		var extraSlash string
 		if destNeedsTrailingSlash {
