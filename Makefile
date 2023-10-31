@@ -1,4 +1,4 @@
-COREUTILS = cat cp dirname false mkdir mv printenv pwd rm rmdir touch true whoami
+COREUTILS = cat cp dirname false ln mkdir mv printenv pwd rm rmdir touch true whoami
 
 VERSION = 0.0.1
 LDFLAGS = -X 'codeberg.org/whou/simpleutils/coreutils.Version=$(VERSION)'

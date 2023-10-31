@@ -43,6 +43,7 @@ Replace `<utility>` with your desired utility (`cat`, for example) and `<argumen
 | cp       | 🟨 | Simple file copies only |
 | dirname  | ✅ |            |
 | false    | ✅ |            |
+| ln       | 🟨 | Basic functionality only |
 | mkdir    | 🟨 | Basic functionality only |
 | mv       | 🟨 | Basic functionality only |
 | printenv | ✅ |            |
