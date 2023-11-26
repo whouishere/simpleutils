@@ -28,7 +28,7 @@ Copy SOURCE to DEST, or multiple SOURCE(s) to DIRECTORY.
 `
 
 func runFlags() {
-	cmd.Init(binary, usage, binary)
+	cmd.Init(binary, usage, binary, binary)
 
 	cmd.Parse()
 }
