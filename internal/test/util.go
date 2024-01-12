@@ -49,10 +49,17 @@ func GetFuncOutput(function func(), testName string) (string, error) {
 	return string(out), err
 }
 
-// get a command's stdout
-func GetCmdOutput(command string) (string, error) {
-	cmd := exec.Command(command)
+// get a command's stdout and exit code
+func GetCmdOutput(command string, arg ...string) (string, int, error) {
+	cmd := exec.Command(command, arg...)
 	out, err := cmd.CombinedOutput()
 
-	return string(out), err
+	var code int
+	if exitErr, ok := err.(*exec.ExitError); ok {
+		code = exitErr.ExitCode()
+	} else if err != nil {
+		code = -1
+	}
+
+	return string(out), code, err
 }

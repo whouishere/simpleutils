@@ -23,8 +23,8 @@ build:
 run:
 	go run coreutils/$(UTIL)/$(UTIL).go $(ARGS)
 
-test:
-	go test ./coreutils/...
+test: build
+	PREFIX="$(BIN_PREFIX)" BUILD_DIR="$(shell pwd)/$(BUILD_DIR)" go test ./coreutils/...
 	go test ./internal/...
 
 install:
