@@ -66,11 +66,15 @@ func removeDir(rmdir string) {
 		cmd.Log("Removing directory '", rmdir, "'")
 	}
 
-	exist, err := myio.FileExists(rmdir)
-	if err != nil {
+	if isdir, err := myio.FileIsDir(rmdir); err != nil {
 		panic(err)
+	} else if !isdir {
+		cmd.FatalError("Not a directory")
 	}
-	if !exist {
+
+	if exist, err := myio.FileExists(rmdir); err != nil {
+		panic(err)
+	} else if !exist {
 		cmd.FatalError("Directory does not exist")
 	}
 
